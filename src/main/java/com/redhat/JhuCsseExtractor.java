@@ -17,8 +17,8 @@ public class JhuCsseExtractor extends RouteBuilder {
 
 
 		from("timer:jhucsse?repeatCount=1")
-			.setHeader("nextFile", simple("02-01-2020"))
-			.setHeader("version", simple("v1"))
+			.setHeader("nextFile", simple("01-01-2021"))
+			.setHeader("version", simple("v2"))
 			.loopDoWhile(method(this, "dateInValidRange(${header.nextFile})"))
 				.setHeader("nextFile", method(this, "computeNextFile(${header.nextFile})"))
 				.setHeader("version", method(this, "getVersion(${header.nextFile})"))
@@ -41,7 +41,7 @@ public class JhuCsseExtractor extends RouteBuilder {
 	
 	public String computeNextFile(@Header("nextFile") String oldDate) {
 		
-		if(oldDate==null) oldDate = "02-02-2020";
+		if(oldDate==null) oldDate = "01-01-2021";
 		System.out.println("oldDate:" + oldDate);
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy");
 		LocalDate date = LocalDate.parse(oldDate, dtf);
@@ -54,10 +54,10 @@ public class JhuCsseExtractor extends RouteBuilder {
 	
 	public Boolean dateInValidRange(@Header("nextFile") String dateToCheck) {
 		
-		if(dateToCheck==null) dateToCheck = "02-02-2020";
+		if(dateToCheck==null) dateToCheck = "01-01-2021";
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy");
 		LocalDate date = LocalDate.parse(dateToCheck, dtf);
-		LocalDate endDate = LocalDate.parse("05-21-2020", dtf);
+		LocalDate endDate = LocalDate.parse("07-11-2021", dtf);
 		Boolean validDate = date.isBefore(endDate);
 		System.out.println("Date in valid range: " + date.isBefore(endDate) + " > " + dateToCheck);
 		return validDate;
@@ -65,13 +65,13 @@ public class JhuCsseExtractor extends RouteBuilder {
   
 	public String getVersion(@Header("nextFile") String dateToCheck) {
 		
-		String version = "v1";
-		if(dateToCheck==null) dateToCheck = "02-02-2020";
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-		LocalDate date = LocalDate.parse(dateToCheck, dtf);
-		LocalDate changeDate = LocalDate.parse("03-21-2020", dtf);
-		if(date.isAfter(changeDate)) version="v2";
-		System.out.println("Date:" + dateToCheck + " > " + version);
+		String version = "v2";
+//		if(dateToCheck==null) dateToCheck = "01-01-2021";
+//		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+//		LocalDate date = LocalDate.parse(dateToCheck, dtf);
+//		LocalDate changeDate = LocalDate.parse("03-21-2020", dtf);
+//		if(date.isAfter(changeDate)) version="v2";
+//		System.out.println("Date:" + dateToCheck + " > " + version);
 		return version;
 	}
 	
